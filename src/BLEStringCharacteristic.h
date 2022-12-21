@@ -30,6 +30,7 @@ public:
   BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize);
 
   int writeValue(const String& value);
+  int writeValue(unsigned char * value, uint8_t len);
   int setValue(const String& value) { return writeValue(value); }
   String value(void);
 

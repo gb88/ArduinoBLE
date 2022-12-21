@@ -84,7 +84,7 @@
 // #define _BLE_TRACE_
 
 ATTClass::ATTClass() :
-  _maxMtu(23),
+  _maxMtu(512),
   _timeout(5000),
   _longWriteHandle(0x0000),
   _longWriteValue(NULL),
@@ -95,7 +95,7 @@ ATTClass::ATTClass() :
     _peers[i].role = 0x00;
     _peers[i].addressType = 0x00;
     memset(_peers[i].address, 0x00, sizeof(_peers[i].address));
-    _peers[i].mtu = 23;
+    _peers[i].mtu = 512;
     _peers[i].device = NULL;
     _peers[i].encryption = 0x0;
   }
@@ -252,7 +252,7 @@ void ATTClass::addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrTy
 
   _peers[peerIndex].connectionHandle = handle;
   _peers[peerIndex].role = role;
-  _peers[peerIndex].mtu = 23;
+  _peers[peerIndex].mtu = 512;
   _peers[peerIndex].addressType = peerBdaddrType;
   memcpy(_peers[peerIndex].address, peerBdaddr, sizeof(_peers[peerIndex].address));
   uint8_t BDADDr[6];
@@ -436,7 +436,7 @@ void ATTClass::removeConnection(uint16_t handle, uint8_t /*reason*/)
   _peers[peerIndex].role = 0x00;
   _peers[peerIndex].addressType = 0x00;
   memset(_peers[peerIndex].address, 0x00, sizeof(_peers[peerIndex].address));
-  _peers[peerIndex].mtu = 23;
+  _peers[peerIndex].mtu = 512;
   _peers[peerIndex].encryption = PEER_ENCRYPTION::NO_ENCRYPTION;
   _peers[peerIndex].IOCap[0] = 0;
   _peers[peerIndex].IOCap[1] = 0;
@@ -533,7 +533,7 @@ uint16_t ATTClass::mtu(uint16_t handle) const
     }
   }
 
-  return 23;
+  return 512;
 }
 
 bool ATTClass::disconnect()
@@ -556,7 +556,7 @@ bool ATTClass::disconnect()
     _peers[i].addressType = 0x00;
     memset(_peers[i].address, 0x00, sizeof(_peers[i].address));
     memset(_peers[i].resolvedAddress, 0x00, sizeof(_peers[i].resolvedAddress));
-    _peers[i].mtu = 23;
+    _peers[i].mtu = 512;
 
     if (_peers[i].device) {
       delete _peers[i].device;
