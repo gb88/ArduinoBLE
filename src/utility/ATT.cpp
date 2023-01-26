@@ -231,10 +231,16 @@ bool ATTClass::setMtu(uint16_t mtu)
 {
   if(mtu > _maxMtu)
   {
+	_mtu = _maxMtu;
 	return false;
   }
   _mtu = mtu;
   return true;
+}
+
+uint16_t ATTClass::getMtu(void)
+{
+  return _mtu;
 }
 
 void ATTClass::setTimeout(unsigned long timeout)

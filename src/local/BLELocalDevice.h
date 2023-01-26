@@ -49,6 +49,7 @@ public:
   virtual int rssi();
   
   virtual bool setMTU(uint16_t mtu);
+  virtual uint16_t getMTU(void);
 
   virtual bool setAdvertisedServiceUuid(const char* advertisedServiceUuid);
   virtual bool setAdvertisedService(const BLEService& service);

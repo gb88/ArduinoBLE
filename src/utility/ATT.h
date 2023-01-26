@@ -56,6 +56,7 @@ public:
 
   virtual void setMaxMtu(uint16_t maxMtu);
   virtual bool setMtu(uint16_t mtu);
+  virtual uint16_t getMtu(void);
   virtual void setTimeout(unsigned long timeout);
 
   virtual bool connect(uint8_t peerBdaddrType, uint8_t peerBdaddr[6]);
