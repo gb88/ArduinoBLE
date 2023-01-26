@@ -85,6 +85,7 @@
 
 ATTClass::ATTClass() :
   _maxMtu(23),
+  _mtu(23),
   _timeout(5000),
   _longWriteHandle(0x0000),
   _longWriteValue(NULL),
@@ -226,6 +227,16 @@ void ATTClass::setMaxMtu(uint16_t maxMtu)
   _maxMtu = maxMtu;
 }
 
+bool ATTClass::setMtu(uint16_t mtu)
+{
+  if(mtu > _maxMtu)
+  {
+	return false;
+  }
+  _mtu = mtu;
+  return true;
+}
+
 void ATTClass::setTimeout(unsigned long timeout)
 {
   _timeout = timeout;
@@ -249,10 +260,9 @@ void ATTClass::addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrTy
     // bail, no space
     return;
   }
-
   _peers[peerIndex].connectionHandle = handle;
   _peers[peerIndex].role = role;
-  _peers[peerIndex].mtu = 23;
+  _peers[peerIndex].mtu = _mtu;
   _peers[peerIndex].addressType = peerBdaddrType;
   memcpy(_peers[peerIndex].address, peerBdaddr, sizeof(_peers[peerIndex].address));
   uint8_t BDADDr[6];
@@ -268,9 +278,21 @@ void ATTClass::addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrTy
     memset(&_peers[peerIndex].resolvedAddress, 0, 6);
   }
 
+  if(_mtu != 23)
+  {
+	  struct __attribute__ ((packed)) {
+		uint8_t op;
+		uint16_t mtu;
+	  } mtuReq = { ATT_OP_MTU_REQ,  _peers[peerIndex].mtu };
+	  uint8_t responseBuffer[_maxMtu];
+	  if (!sendReq(_peers[peerIndex].connectionHandle, &mtuReq, sizeof(mtuReq), responseBuffer)) 
+		 _peers[peerIndex].mtu = 23;
+  }
+  
   if (_eventHandlers[BLEConnected]) {
     _eventHandlers[BLEConnected](BLEDevice(peerBdaddrType, peerBdaddr));
   }
+
 }
 
 void ATTClass::handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[])
@@ -281,7 +303,6 @@ void ATTClass::handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[
   data++;
 
   uint16_t mtu = this->mtu(connectionHandle);
-
 #ifdef _BLE_TRACE_
   Serial.print("data opcode: 0x");
   Serial.println(opcode, HEX);
