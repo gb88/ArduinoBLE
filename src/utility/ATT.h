@@ -55,6 +55,7 @@ public:
   virtual ~ATTClass();
 
   virtual void setMaxMtu(uint16_t maxMtu);
+  virtual bool setMtu(uint16_t mtu);
   virtual void setTimeout(unsigned long timeout);
 
   virtual bool connect(uint8_t peerBdaddrType, uint8_t peerBdaddr[6]);
@@ -143,6 +144,7 @@ private:
 
 private:
   uint16_t _maxMtu;
+  uint16_t _mtu;
   unsigned long _timeout;
   struct {
     uint16_t connectionHandle;

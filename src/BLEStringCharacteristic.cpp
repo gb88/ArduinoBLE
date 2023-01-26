@@ -33,6 +33,7 @@ int BLEStringCharacteristic::writeValue(unsigned char * value, uint8_t len)
 {
   return BLECharacteristic::writeValue(value, len);
 }
+
 String BLEStringCharacteristic::value(void)
 {
   String str;
